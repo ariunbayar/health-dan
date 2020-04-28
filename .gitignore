@@ -3,3 +3,5 @@
 __pycache__
 venv/
 app/db.sqlite3
+app/main/settings/dev.py
+app/main/settings/prod.py
