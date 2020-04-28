@@ -1,0 +1,131 @@
+<!doctype html>
+{% load static %}
+<html>
+
+<head>
+
+    <link href="{% static "css/main.css" %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+<h2>Хандах системүүд</h2>
+
+<div class="client-list">
+
+    {% for client in clients %}
+    <div>
+        <h3>{{ client.name }}</h3>
+
+        {% if client.is_active %}
+        <span class="label-green">идэвхитэй</span>
+        {% endif %}
+
+        <table class="fullwidth">
+            <tbody>
+                <tr>
+                    <th>Client key:</th>
+                    <td><code>{{ client.api_key }}</code></td>
+                </tr>
+                <tr>
+                    <th>Client secret:</th>
+                    <td><code>{{ client.api_secret }}</code></td>
+                </tr>
+                <tr>
+                    <th>Үүсгэсэн:</th>
+                    <td>
+                        {{ client.created_at|date }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Зассан:</th>
+                    <td>
+                        {{ client.updated_at|date }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p></p>
+
+        <table class="fullwidth">
+            <tbody>
+                <tr>
+                    <td width="50%">
+                        <a href="{% url "client-toggle-active" client.pk %}">
+                            {% if client.is_active %}
+                                түдгэлзүүлэх
+                            {% else %}
+                                идэвхитэй болгох
+                            {% endif %}
+                        </a>
+                    </td>
+                    <td width="50%" align="right">
+                        <a href="{% url "client-delete" client.pk %}" onclick="return confirm('Устгахдаа итгэлтэй байна уу?')">устгах</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+
+    <div>
+
+        <h3>Шинээр бүртгэх</h3>
+
+        <form method="POST" action="" novalidate>
+
+            {% csrf_token %}
+
+            <table>
+                <tbody>
+                    <tr>
+                        <th> <label for="{{ form.name.auto_id }}">{{ form.name.label }}</label> </th>
+                        <td>
+                            {{ form.name }}
+                            {{ form.name.errors }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th> Client key: </th>
+                        <td> <i>Автоматаар үүсгэнэ</i> </td>
+                    </tr>
+                    <tr>
+                        <th> Client secret: </th>
+                        <td> <i>Автоматаар үүсгэнэ</i> </td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td>
+                            <label>
+                                {{ form.is_active }}
+                                {{ form.is_active.label }}
+                            </label>
+                            {{ form.is_active.errors }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button type="submit">Хадгалах</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+</body>
+
+</html>
