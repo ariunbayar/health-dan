@@ -1,0 +1,50 @@
+<h3>Шинээр бүртгэх</h3>
+
+<form method="POST" action="" novalidate>
+
+    {% csrf_token %}
+
+    <table>
+        <tbody>
+            <tr>
+                <th> <label for="{{ form.name.auto_id }}">{{ form.name.label }}</label> </th>
+                <td>
+                    {{ form.name }}
+                    {{ form.name.errors }}
+                </td>
+            </tr>
+            <tr>
+                <th> <label for="{{ form.redirect_uri.auto_id }}">{{ form.redirect_uri.label }}</label> </th>
+                <td>
+                    {{ form.redirect_uri }}
+                    {{ form.redirect_uri.errors }}
+                </td>
+            </tr>
+            <tr>
+                <th> Client key: </th>
+                <td> <i>Автоматаар үүсгэнэ</i> </td>
+            </tr>
+            <tr>
+                <th> Client secret: </th>
+                <td> <i>Автоматаар үүсгэнэ</i> </td>
+            </tr>
+            <tr>
+                <th></th>
+                <td>
+                    <label>
+                        {{ form.is_active }}
+                        {{ form.is_active.label }}
+                    </label>
+                    {{ form.is_active.errors }}
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button type="submit">Хадгалах</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</form>

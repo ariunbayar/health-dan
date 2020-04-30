@@ -12,15 +12,18 @@ class ClientForm(forms.ModelForm):
         fields = [
             'name',
             'is_active',
+            'redirect_uri',
         ]
 
         labels = {
             'name': 'Нэр',
             'is_active': 'Идэвхитэй эсэх',
+            'redirect_uri': 'Redirect URI',
         }
 
         widgets = {}
 
         error_messages = {
             'name': {'required': 'оруулна уу!'},
+            'redirect_uri': {'required': 'оруулна уу!'},
         }

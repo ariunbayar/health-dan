@@ -1,0 +1,423 @@
+<!doctype html>
+{% load static %}
+<html>
+
+<head>
+
+    <link href="{% static "css/main.css" %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+<h2>Хэрэглэх заавар</h2>
+
+
+<p>
+Уг зааварт жишээ болгон таны сайтыг <strong>example.com</strong> гэсэн домэйн нэрээр ашиглав.
+Тохиргоог гүйцэтгэхдээ өөрийн домэйн хаягаар орлуулан ашиглана уу!
+</p>
+
+<p> Өөрийн системд тохиргоог гүйцэтгэхдээ {{ "https://tz.mohs.mn/api/" | urlize }} нэвтрэх системд
+урьдчилан бүртгүүлсэн байх шаардлагатайг анхаарна уу! </p>
+
+<p> Бүртгүүлэхэд шаардагдах мэдээллүүд: </p>
+
+<table>
+    <tbody>
+        <tr>
+            <th align="right">Системийн нэр</th>
+            <td>Танай системийн нэр</td>
+        </tr>
+        <tr>
+            <th align="right">Redirect URI</th>
+            <td>Нэвтрэлтийн дараа redirect хийх танай системийн link</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>Бүртгүүлсэний дараагаар хүлээн авах мэдээллүүд:</p>
+
+<table>
+    <tbody>
+        <tr>
+            <th align="right">Client key</th>
+            <td>
+                Танай системийг таних дахин давтагдашгүй дугаар<br/>
+                <strong>24</strong> тэмдэгтийн урттай <code>base64</code> ашиглан кодлогдсон утга.
+            </td>
+        </tr>
+        <tr>
+            <th align="right">Client secret</th>
+            <td>
+                Нууцлах шаардлагатай түлхүүр.<br/>
+                Мэдээлэл солилцох үед өгөгдлийн hash-д давхар ашиглагдана.<br/>
+                <strong>88</strong> тэмдэгтийн урттай <code>base64</code> ашиглан кодлогдсон утга.
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+<div class="code-intros">
+
+    <h3> 1. Хэрэглэгч танай example.com сайтад нэвтрэхээр хандах </h3>
+
+    <div>
+        <p>Хэрэглэгч танай сайтад нэвтрэхээр <code>https://example.com/login</code> хуудсанд  хандана.</p>
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>GET /<strong>&lt;login_page&gt;</strong> HTTP/1.1</code>
+            <code>Host: <strong>&lt;domain&gt;</strong></code>
+        </pre>
+        {% endspaceless %}
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>GET /<strong>login</strong> HTTP/1.1</code>
+            <code>Host: <strong>example.com</strong></code>
+        </pre>
+        {% endspaceless %}
+    </div>
+
+    <div>
+        <p>
+            <strong>example.com</strong> сайт нь хэрэглэгчийг <code>https://tz.mohs.mn/api/login/</code> систем рүү хандуулна.<br/>
+            Ингэхдээ <code>client_key</code>, <code>redirect_uri</code>, <code>state</code> утгуудыг
+            querystring параметрээр дамжуулна.
+        </p>
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>HTTP/1.1 302 Found</code>
+            <code>Location: https://tz.mohs.mn/api/login/?client_key=<strong>&lt;client_key&gt;</strong>&amp;redirect_uri=<strong>&lt;redirect_uri&gt;</strong>&amp;state=<strong>&lt;state&gt;</strong></code>
+        </pre>
+        {% endspaceless %}
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>HTTP/1.1 302 Found</code>
+            <code>Location: https://tz.mohs.mn/api/login/?client_key=<strong>JuCt7pExA8M0XVKbufSR%2BQ%3D%3D</strong>&amp;redirect_uri=<strong>https%3A%2F%2Fexample.com%2Fapi%2Fauth%2F</strong>&amp;state=<strong>77ddbc27b0cfccfed0de8dc282b791131a7aec9de37fc227825bc47a70b50dc8</strong></code>
+        </pre>
+        {% endspaceless %}
+    </div>
+
+    <div>
+        <table class="fullwidth">
+            <tbody>
+                <tr>
+                    <td align="right"><code>&lt;client_key&gt;</code></td>
+                    <td>
+                        Бүртгүүлсэний дараагаар хүлээн авсан утга<br/>
+                        Жишээ нь: <code>JuCt7pExA8M0XVKbufSR+Q==</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right"><code>&lt;redirect_uri&gt;</code></td>
+                    <td>
+                        Бүртгүүлэхдээ мэдүүлсэн redirect линк<br/>
+                        Жишээ нь: <code>https://example.com/api/auth/</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right"><code>&lt;state&gt;</code></td>
+                    <td>
+                        Танай системээс хандалт бүрт шинээр үүсгэх шаардлагатай.<br/>
+                        Танай системд хандаж буй тухайн хэрэглэгчийн хувьд үүсэх дахин давтагдашгүй дугаар.<br/>
+                        <strong>64</strong> тэмдэгтийн урттай <code>random</code> <code>hex</code> утга байна.<br/>
+                        Жишээ нь: <code class="word-break">77ddbc27b0cfccfed0de8dc282b791131a7aec9de37fc227825bc47a70b50dc8</code>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+    </div>
+
+
+    <h3> 2. Хэрэглэгч tz.mohs.mn/api/login/ системд хандаж нэвтрэнэ </h3>
+
+    <div>
+        <p>
+            Танай <code>example.com/login</code> хуудаснаас илгээсний дагуу
+            хэрэглэгч нь <code>tz.mohs.mn/api/login/</code> хуудсанд хандана.
+        </p>
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>GET /api/login/?client_key=<strong>&lt;client_key&gt;</strong>&amp;redirect_uri=<strong>&lt;redirect_uri&gt;</strong>&amp;state=<strong>&lt;state&gt;</strong> HTTP/1.1</code>
+            <code>Host: tz.mohs.mn</code>
+        </pre>
+        {% endspaceless %}
+    </div>
+    <div>
+        {% spaceless %}
+        <pre class="word-break">
+            <code>GET /api/login/?client_key=<strong>JuCt7pExA8M0XVKbufSR%2BQ%3D%3D</strong>&amp;redirect_uri=<strong>https%3A%2F%2Fexample.com%2Fapi%2Fauth%2F</strong>&amp;state=<strong>77ddbc27b0cfccfed0de8dc282b791131a7aec9de37fc227825bc47a70b50dc8</strong> HTTP/1.1</code>
+            <code>Host: tz.mohs.mn</code>
+        </pre>
+        {% endspaceless %}
+    </div>
+
+    <div>
+        <p>
+            Хэрэглэгч <code>tz.mohs.mn/api/login/</code> системд нэвтрэнэ.
+        </p>
+    </div>
+    <div> </div>
+    <div> </div>
+
+    <div>
+        <p>
+            Хэрэглэгч амжилттай нэвтэрсэний дараагаар <code>auth_code</code> гэсэн нэвтрэлтийн код
+            үүсгэж хэрэглэгчийг танай урьдчилан бүртгүүлсэн <code>&lt;redirect_uri&gt;</code>
+            хуудас рүү хандуулна.
+        </p>
+
+        <table class="fullwidth">
+            <tbody>
+                <tr>
+                    <td align="right"><code>&lt;redirect_uri&gt;</code></td>
+                    <td>
+                        Бүртгүүлэхдээ мэдүүлсэн redirect линк<br/>
+                        Жишээ нь: <code>https://example.com/api/auth/</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right"><code>&lt;auth_code&gt;</code></td>
+                    <td>
+                        Тухайн хэрэглэгч, танай системийг төлөөлөх нэг удаагийн нэвтрэлтийн код.<br/>
+                        <strong>128</strong> тэмдэгтийн урттай <code>base64</code> ашиглан кодлогдсон утга.<br/>
+                        Жишээ нь: <code class="word-break">2lG5oyADZhjihU1XgXTJLTiZUB4dP7XVW2oUJkAAVVuyZ10hX6sIfXi+PPCz8eDkmx0PmyodVQIetDmTCgEn7siFE4/gMEaOEwOD2QcNYube38BcZSIDUErJfwVFbi9H</code>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>HTTP/1.1 302 Found</code>
+            <code>Location: <strong>&lt;redirect_uri&gt;</strong>?auth_code=<strong>&lt;auth_code&gt;</strong>&amp;state=<strong>&lt;state&gt;</strong></code>
+        </pre>
+        {% endspaceless %}
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>HTTP/1.1 302 Found</code>
+            <code>Location: <strong>https://example.com/api/auth/</strong>?auth_code=<strong>2lG5oyADZhjihU1XgXTJLTiZUB4dP7XVW2oUJkAAVVuyZ10hX6sIfXi%2BPPCz8eDkmx0PmyodVQIetDmTCgEn7siFE4%2FgMEaOEwOD2QcNYube38BcZSIDUErJfwVFbi9H</strong>&amp;state=<strong>77ddbc27b0cfccfed0de8dc282b791131a7aec9de37fc227825bc47a70b50dc8</strong></code>
+        </pre>
+        {% endspaceless %}
+    </div>
+
+
+    <h3> 3. Хэрэглэгч танай example.com сайтад эргэн хандана </h3>
+
+    <div>
+        <p>
+            Нэвтрэлтийн <code>tz.mohs.mn/api/login/</code> системээс илгээсний дагуу
+            хэрэглэгч нь <code>example.com/login</code> хуудсанд хандана.
+        </p>
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>GET <strong>&lt;redirect_uri&gt;</strong>?auth_code=<strong>&lt;auth_code&gt;</strong>&amp;state=<strong>&lt;state&gt;</strong> HTTP/1.1</code>
+            <code>Host: <strong>&lt;domain&gt;</strong></code>
+        </pre>
+        {% endspaceless %}
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>GET <strong>/api/auth/</strong>?auth_code=<strong>2lG5oyADZhjihU1XgXTJLTiZUB4dP7XVW2oUJkAAVVuyZ10hX6sIfXi%2BPPCz8eDkmx0PmyodVQIetDmTCgEn7siFE4%2FgMEaOEwOD2QcNYube38BcZSIDUErJfwVFbi9H</strong>&amp;state=<strong>77ddbc27b0cfccfed0de8dc282b791131a7aec9de37fc227825bc47a70b50dc8</strong> HTTP/1.1</code>
+            <code>Host: <strong>example.com</strong></code>
+        </pre>
+        {% endspaceless %}
+    </div>
+
+    <div>
+        <p>
+            querystring параметрээр ирсэн <code>state</code> -ийг тухайн хэрэглэгчийн хувьд
+            үүсгэсэн утгатай ижил байгаа эсэхийг шалгана.<br/>
+        </p>
+        <p>
+            Ижил байгаа нь халдлагын шинжтэй үйлдэл гараагүйг илтгэнэ.
+        </p>
+    </div>
+    <div></div>
+    <div></div>
+
+
+    <h3> 4. Танай example.com сайтаас tz.mohs.mn рүү хандаж access_token авна </h3>
+
+    <div>
+        <p>
+            querystring параметрээр ирсэн <code>auth_code</code> -ийг ашиглан
+            <code>example.com</code> сайтаас
+            <code>tz.mohs.mn/api/auth/</code> хуудас руу <strong>POST</strong> хандалт хийнэ.
+        </p>
+
+        <table class="fullwidth">
+            <tbody>
+                <tr>
+                    <td align="right"><code>&lt;client_secret&gt;</code></td>
+                    <td>
+                        Бүртгүүлсэний дараагаар хүлээн авсан утга
+                        Жишээ нь: <code class="word-break">SabnZ9AAUrZa/z1k/E0BU6AKn/qktJMeSVZoV3JdKyTf4TiDErz1miF2fUSkcWpGeaf8kwP+H6NkqMNJdDPCAA==</code>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>POST /api/auth/?auth_code=<strong>&lt;auth_code&gt;</strong>&amp;client_id=<strong>&lt;client_id&gt;</strong>&amp;client_secret=<strong>&lt;client_secret&gt;</strong>&amp;redirect_uri=<strong>&lt;redirect_uri&gt;</strong> HTTP/1.1</code>
+            <code>Host: tz.mohs.mn</code>
+        </pre>
+        {% endspaceless %}
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>POST /api/auth/?auth_code=<strong>2lG5oyADZhjihU1XgXTJLTiZUB4dP7XVW2oUJkAAVVuyZ10hX6sIfXi%2BPPCz8eDkmx0PmyodVQIetDmTCgEn7siFE4%2FgMEaOEwOD2QcNYube38BcZSIDUErJfwVFbi9H&gt;</strong>&amp;client_id=<strong>JuCt7pExA8M0XVKbufSR%2BQ%3D%3D</strong>&amp;client_secret=<strong>SabnZ9AAUrZa%2Fz1k%2FE0BU6AKn%2FqktJMeSVZoV3JdKyTf4TiDErz1miF2fUSkcWpGeaf8kwP%2BH6NkqMNJdDPCAA%3D%3D</strong>&amp;redirect_uri=<strong>https%3A%2F%2Fexample.com%2Fapi%2Fauth%2F</strong> HTTP/1.1</code>
+            <code>Host: tz.mohs.mn</code>
+        </pre>
+        {% endspaceless %}
+    </div>
+
+    <div>
+        <p>
+            <code>tz.mohs.mn/api/auth/</code> нь <strong>POST</strong> хүсэлтийг
+            хүлээн авч <code>access_token</code>, <code>token_type</code>, <code>expires_in</code>,
+            <code>scope</code> утгуудыг хариу илгээнэ.
+        </p>
+
+        <table class="fullwidth">
+            <tbody>
+                <tr>
+                    <td align="right"><code>&lt;access_token&gt;</code></td>
+                    <td>
+                        Хэрэглэгчийн зөвшөөрсөний дагуу хувийн мэдээллийг дуудах
+                        нэг удаагийн код.<br/>
+                        <strong>128</strong> тэмдэгтийн урттай <code>base64</code> утга байна.<br/>
+                        Жишээ нь: <code class="word-break">1ZhyBH9OYW5cdvKZIzl+QJQRRv7bO5L0baKZJgyJ63I7/1MD5EtA2y/hj/08KOXTIO0wlksTnvCttFSS+3crnPgfX5uR8tEFqYi66H3qZ0zNbVjznsBtVKWwSnQCkXsz</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right"><code>&lt;token_type&gt;</code></td>
+                    <td>
+                        Хандалтын хэлбэрийг тодорхойлсон төрөл.
+                        Жишээ нь: <code class="word-break">Bearer</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right"><code>&lt;expires_in&gt;</code></td>
+                    <td>
+                        Хандалтын кодын секундээр илэрхийлсэн хүчинтэй байх хугацаа.
+                        Жишээ нь: <code class="word-break">60</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right"><code>&lt;scope&gt;</code></td>
+                    <td>
+                        Хандалтаар дуудагдах сервисийн загвар.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>HTTP/1.1 200 OK</code>
+            <code>Content-Type: application/json</code>
+            <code>&nbsp;</code>
+            <code>{</code>
+            <code>"access_token": "<strong>&lt;access_token&gt;</strong>",</code>
+            <code>"token_type": "<strong>&lt;token_type&gt;</strong>",</code>
+            <code>"expires_in": "<strong>&lt;expires_in&gt;</strong>",</code>
+            <code>"scope": "<strong>&lt;scope&gt;</strong>"</code>
+            <code>}</code>
+        </pre>
+        {% endspaceless %}
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>HTTP/1.1 200 OK</code>
+            <code>Content-Type: application/json</code>
+            <code>&nbsp;</code>
+            <code>{</code>
+            <code>"access_token": "<strong>1ZhyBH9OYW5cdvKZIzl+QJQRRv7bO5L0baKZJgyJ63I7/1MD5EtA2y/hj/08KOXTIO0wlksTnvCttFSS+3crnPgfX5uR8tEFqYi66H3qZ0zNbVjznsBtVKWwSnQCkXsz</strong>",</code>
+            <code>"token_type": "<strong>Bearer</strong>",</code>
+            <code>"expires_in": "<strong>60</strong>"</code>
+            <code>}</code>
+        </pre>
+        {% endspaceless %}
+    </div>
+
+
+    <h3> 5. Танай example.com сайтаас tz.mohs.mn рүү хандаж хэрэглэгчийн хувийн мэдээллийг авна </h3>
+
+    <div>
+        <p>
+            <strong>JSON</strong> агуулга дээр ирсэн утгын дагуу
+            <strong>Authorization</strong> header дээр
+            <code>token_type</code>, <code>access_token</code>
+            -ийг оруулан заагдсан <code>expires_in</code> хугацаанд
+            <code>example.com</code> сайтаас
+            <code>tz.mohs.mn/api/service/</code> хуудас руу
+            <strong>GET</strong> хандалтаар хэрэглэгчийн хувийн мэдээллийг авах хүсэлт илгээнэ.
+        </p>
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>POST /api/service/ HTTP/1.1</code>
+            <code>Host: tz.mohs.mn</code>
+            <code>Authorization: <strong>&lt;token_type&gt;</strong> <strong> &lt;access_token&gt;</strong></code>
+        </pre>
+        {% endspaceless %}
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>POST /api/service/ HTTP/1.1</code>
+            <code>Host: tz.mohs.mn</code>
+            <code>Authorization: <strong>Bearer </strong> <strong>1ZhyBH9OYW5cdvKZIzl+QJQRRv7bO5L0baKZJgyJ63I7/1MD5EtA2y/hj/08KOXTIO0wlksTnvCttFSS+3crnPgfX5uR8tEFqYi66H3qZ0zNbVjznsBtVKWwSnQCkXsz</strong></code>
+        </pre>
+        {% endspaceless %}
+    </div>
+
+    <div>
+        <p>
+            Хандалтын код зөв бол хүссэн үр дүнг дуудаж буцаана.
+        </p>
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>HTTP/1.1 200 OK</code>
+            <code>Content-Type: application/json</code>
+            <code>&nbsp;</code>
+            <code>{<strong>&lt;хэрэглэгчийн хувийн мэдээлэл&gt;</strong>}</code>
+        </pre>
+        {% endspaceless %}
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

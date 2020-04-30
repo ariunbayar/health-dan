@@ -1,5 +1,34 @@
+@font-face{
+     font-family:"Lato";
+    src:url("../fonts/Lato/lato-regular.eot");
+    src:url("../fonts/Lato/lato-regular.eot?#iefix") format("embedded-opentype"),url("../fonts/Lato/lato-regular.woff2") format("woff2"),url("../fonts/Lato/lato-regular.woff") format("woff"),url("../fonts/Lato/lato-regular.ttf") format("truetype");
+    font-weight:400;
+    font-style:normal
+}
+@font-face{
+    font-family:"Lato";
+    src:url("../fonts/Lato/lato-bold.eot");
+    src:url("../fonts/Lato/lato-bold.eot?#iefix") format("embedded-opentype"),url("../fonts/Lato/lato-bold.woff2") format("woff2"),url("../fonts/Lato/lato-bold.woff") format("woff"),url("../fonts/Lato/lato-bold.ttf") format("truetype");
+    font-weight:700;
+    font-style:normal
+}
+@font-face{
+    font-family:"Lato";
+    src:url("../fonts/Lato/lato-bolditalic.eot");
+    src:url("../fonts/Lato/lato-bolditalic.eot?#iefix") format("embedded-opentype"),url("../fonts/Lato/lato-bolditalic.woff2") format("woff2"),url("../fonts/Lato/lato-bolditalic.woff") format("woff"),url("../fonts/Lato/lato-bolditalic.ttf") format("truetype");
+    font-weight:700;
+    font-style:italic
+}
+@font-face{
+    font-family:"Lato";
+    src:url("../fonts/Lato/lato-italic.eot");
+    src:url("../fonts/Lato/lato-italic.eot?#iefix") format("embedded-opentype"),url("../fonts/Lato/lato-italic.woff2") format("woff2"),url("../fonts/Lato/lato-italic.woff") format("woff"),url("../fonts/Lato/lato-italic.ttf") format("truetype");
+    font-weight:400;
+    font-style:italic
+}
+
 body{
-    font-family: sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 table {
     border-collapse: collapse;
@@ -21,16 +50,14 @@ td, th {
 
 .client-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(20rem, 24rem));
+    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
     grid-gap: 2rem;
 }
 
 .client-list h3{
-    min-height: 2rem;
-}
-
-.client-list code {
-    word-break: break-all;
+    margin-top: 0;
+    background-color: rgba(227, 230, 240, 0.35);
+    color: inherit;
 }
 
 .client-list > div{
@@ -45,4 +72,79 @@ td, th {
     font-size: .8rem;
     padding: .4rem 1rem;
     border-radius: .2rem;
+}
+
+
+.word-break {
+    word-break: break-all;
+}
+
+
+pre {
+    background-color: rgba(227, 230, 240, 0.35);
+    margin: 1rem 0;
+    padding: 1rem 1rem;
+    white-space: pre-line;
+    line-height: 1.2rem;
+    counter-reset: line;
+}
+
+pre code{
+    border-width: 0;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    counter-increment: line;
+    line-height: 1.2rem;
+    position: relative;
+    padding-left: 2.4rem;
+    display: block;
+    word-break: break-all;
+}
+pre code:before{
+    content: counter(line);
+    border-right: .25rem solid #e3e6f0;
+    padding-right: .4rem;
+    margin-right: .4rem;
+    width: 1.4rem;
+    display: inline-block;
+    text-align: right;
+    color: #a5afcf;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+pre code strong {
+    color: #d9534f;
+}
+
+code {
+    border: .1rem solid #e3e6f0;
+    background-color: rgba(227, 230, 240, 0.35);
+    border-radius: .2rem;
+    padding: 0 .4rem;
+}
+
+
+.code-intros {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 0 2rem;
+    grid-auto-rows: auto;
+}
+
+.code-intros h3 {
+    grid-column: span 3;
+}
+
+h1, h2, h3 {
+    padding: 1rem;
+    background-color: #d9534f;
+    color: #fff;
+    border-left: .25rem solid #fecc00;
+}
+
+h3 {
+    padding: .4rem 1rem;
 }
