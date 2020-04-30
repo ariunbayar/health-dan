@@ -1,6 +1,9 @@
 import os
 import base64
+
 from django.shortcuts import render, get_object_or_404, redirect
+
+from main.decorators import admin_required
 
 from .models import Client
 from .forms import ClientForm
@@ -10,6 +13,7 @@ def _get_random_b64(length):
     return base64.b64encode(os.urandom(length)).decode('utf-8')
 
 
+@admin_required
 def index(request):
 
     clients = Client.objects.all()
@@ -34,12 +38,14 @@ def index(request):
     return render(request, 'client/index.html', context)
 
 
+@admin_required
 def delete(request, pk):
     client = get_object_or_404(Client, pk=pk)
     client.delete()
     return redirect('client-index')
 
 
+@admin_required
 def toggle_active(request, pk):
     client = get_object_or_404(Client, pk=pk)
     client.is_active = not client.is_active

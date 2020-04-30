@@ -36,7 +36,7 @@ urlpatterns += prefix_patterns(
     )
 
 urlpatterns += prefix_patterns(
-        'api/', secure.views, 'secure-',
+        'api/admin/', secure.views, 'secure-',
         ('login/', 'login', {}, 'login'),
         ('logout/', 'logout', {}, 'logout'),
     )
