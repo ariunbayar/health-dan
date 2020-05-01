@@ -27,31 +27,31 @@ def prefix_patterns(uri_prefix, view, name_prefix, *patterns):
 urlpatterns = []
 
 urlpatterns += prefix_patterns(
-        'api/', page.views, 'page-',
+        '', page.views, 'page-',
         ('', 'homepage', {}, 'homepage'),
     )
 
 urlpatterns += prefix_patterns(
-        'api/p/', page.views, 'page-',
+        'p/', page.views, 'page-',
         ('instructions/', 'instructions', {}, 'instructions'),
         ('dashboard/', 'dashboard', {}, 'dashboard'),
     )
 
 urlpatterns += prefix_patterns(
-        'api/admin/', secure.views, 'secure-',
+        'admin/', secure.views, 'secure-',
         ('login/', 'login', {}, 'login'),
         ('logout/', 'logout', {}, 'logout'),
     )
 
 urlpatterns += prefix_patterns(
-        'api/client/', client.views, 'client-',
+        'client/', client.views, 'client-',
         ('index/', 'index', {}, 'index'),
         ('<int:pk>/delete/', 'delete', {}, 'delete'),
         ('<int:pk>/toggle-active/', 'toggle_active', {}, 'toggle-active'),
     )
 
 urlpatterns += prefix_patterns(
-        'api/', oauth2.views, 'oauth2-',
+        '', oauth2.views, 'oauth2-',
         ('dan/', 'dan', {}, 'dan'),
         ('login/', 'login', {}, 'login'),
         ('auth/', 'authorize', {}, 'authorize'),
