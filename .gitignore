@@ -5,3 +5,6 @@ venv/
 app/db.sqlite3
 app/main/settings/dev.py
 app/main/settings/prod.py
+
+docker/dev/env/*.env
+docker/prod/env/*.env
