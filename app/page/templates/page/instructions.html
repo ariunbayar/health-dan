@@ -82,7 +82,7 @@
 
     <h3> 1. Хэрэглэгч танай example.com сайтад нэвтрэхээр хандах </h3>
 
-    <div>
+    <div tabindex=0>
         <p>Хэрэглэгч танай сайтад нэвтрэхээр <code>https://example.com/login</code> хуудсанд  хандана.</p>
     </div>
     <div>
@@ -102,31 +102,12 @@
         {% endspaceless %}
     </div>
 
-    <div>
+    <div tabindex=0>
         <p>
             <strong>example.com</strong> сайт нь хэрэглэгчийг <code>https://tz.mohs.mn/api/login/</code> систем рүү хандуулна.<br/>
             Ингэхдээ <code>client_key</code>, <code>redirect_uri</code>, <code>state</code> утгуудыг
             querystring параметрээр дамжуулна.
         </p>
-    </div>
-    <div>
-        {% spaceless %}
-        <pre>
-            <code>HTTP/1.1 302 Found</code>
-            <code>Location: https://tz.mohs.mn/api/login/?client_key=<strong>&lt;client_key&gt;</strong>&amp;redirect_uri=<strong>&lt;redirect_uri&gt;</strong>&amp;state=<strong>&lt;state&gt;</strong></code>
-        </pre>
-        {% endspaceless %}
-    </div>
-    <div>
-        {% spaceless %}
-        <pre>
-            <code>HTTP/1.1 302 Found</code>
-            <code>Location: https://tz.mohs.mn/api/login/?client_key=<strong>JuCt7pExA8M0XVKbufSR%2BQ%3D%3D</strong>&amp;redirect_uri=<strong>https%3A%2F%2Fexample.com%2Fapi%2Fauth%2F</strong>&amp;state=<strong>77ddbc27b0cfccfed0de8dc282b791131a7aec9de37fc227825bc47a70b50dc8</strong></code>
-        </pre>
-        {% endspaceless %}
-    </div>
-
-    <div>
         <table class="fullwidth">
             <tbody>
                 <tr>
@@ -156,12 +137,26 @@
         </table>
     </div>
     <div>
+        {% spaceless %}
+        <pre>
+            <code>HTTP/1.1 302 Found</code>
+            <code>Location: https://tz.mohs.mn/api/login/?client_key=<strong>&lt;client_key&gt;</strong>&amp;redirect_uri=<strong>&lt;redirect_uri&gt;</strong>&amp;state=<strong>&lt;state&gt;</strong></code>
+        </pre>
+        {% endspaceless %}
+    </div>
+    <div>
+        {% spaceless %}
+        <pre>
+            <code>HTTP/1.1 302 Found</code>
+            <code>Location: https://tz.mohs.mn/api/login/?client_key=<strong>JuCt7pExA8M0XVKbufSR%2BQ%3D%3D</strong>&amp;redirect_uri=<strong>https%3A%2F%2Fexample.com%2Fapi%2Fauth%2F</strong>&amp;state=<strong>77ddbc27b0cfccfed0de8dc282b791131a7aec9de37fc227825bc47a70b50dc8</strong></code>
+        </pre>
+        {% endspaceless %}
     </div>
 
 
     <h3> 2. Хэрэглэгч tz.mohs.mn/api/login/ системд хандаж нэвтрэнэ </h3>
 
-    <div>
+    <div tabindex=0>
         <p>
             Танай <code>example.com/login</code> хуудаснаас илгээсний дагуу
             хэрэглэгч нь <code>tz.mohs.mn/api/login/</code> хуудсанд хандана.
@@ -184,15 +179,15 @@
         {% endspaceless %}
     </div>
 
-    <div>
+    <div tabindex=0>
         <p>
             Хэрэглэгч <code>tz.mohs.mn/api/login/</code> системд нэвтрэнэ.
         </p>
     </div>
-    <div> </div>
-    <div> </div>
+    <div></div>
+    <div></div>
 
-    <div>
+    <div tabindex=0>
         <p>
             Хэрэглэгч амжилттай нэвтэрсэний дараагаар <code>auth_code</code> гэсэн нэвтрэлтийн код
             үүсгэж хэрэглэгчийг танай урьдчилан бүртгүүлсэн <code>&lt;redirect_uri&gt;</code>
@@ -239,7 +234,7 @@
 
     <h3> 3. Хэрэглэгч танай example.com сайтад эргэн хандана </h3>
 
-    <div>
+    <div tabindex=0>
         <p>
             Нэвтрэлтийн <code>tz.mohs.mn/api/login/</code> системээс илгээсний дагуу
             хэрэглэгч нь <code>example.com/login</code> хуудсанд хандана.
@@ -262,7 +257,7 @@
         {% endspaceless %}
     </div>
 
-    <div>
+    <div tabindex=0>
         <p>
             querystring параметрээр ирсэн <code>state</code> -ийг тухайн хэрэглэгчийн хувьд
             үүсгэсэн утгатай ижил байгаа эсэхийг шалгана.<br/>
@@ -277,7 +272,7 @@
 
     <h3> 4. Танай example.com сайтаас tz.mohs.mn рүү хандаж access_token авна </h3>
 
-    <div>
+    <div tabindex=0>
         <p>
             querystring параметрээр ирсэн <code>auth_code</code> -ийг ашиглан
             <code>example.com</code> сайтаас
@@ -299,7 +294,7 @@
     <div>
         {% spaceless %}
         <pre>
-            <code>POST /api/auth/?auth_code=<strong>&lt;auth_code&gt;</strong>&amp;client_id=<strong>&lt;client_id&gt;</strong>&amp;client_secret=<strong>&lt;client_secret&gt;</strong>&amp;redirect_uri=<strong>&lt;redirect_uri&gt;</strong> HTTP/1.1</code>
+            <code>POST /api/auth/?auth_code=<strong>&lt;auth_code&gt;</strong>&amp;client_key=<strong>&lt;client_key&gt;</strong>&amp;client_secret=<strong>&lt;client_secret&gt;</strong>&amp;redirect_uri=<strong>&lt;redirect_uri&gt;</strong> HTTP/1.1</code>
             <code>Host: tz.mohs.mn</code>
         </pre>
         {% endspaceless %}
@@ -307,13 +302,14 @@
     <div>
         {% spaceless %}
         <pre>
-            <code>POST /api/auth/?auth_code=<strong>2lG5oyADZhjihU1XgXTJLTiZUB4dP7XVW2oUJkAAVVuyZ10hX6sIfXi%2BPPCz8eDkmx0PmyodVQIetDmTCgEn7siFE4%2FgMEaOEwOD2QcNYube38BcZSIDUErJfwVFbi9H&gt;</strong>&amp;client_id=<strong>JuCt7pExA8M0XVKbufSR%2BQ%3D%3D</strong>&amp;client_secret=<strong>SabnZ9AAUrZa%2Fz1k%2FE0BU6AKn%2FqktJMeSVZoV3JdKyTf4TiDErz1miF2fUSkcWpGeaf8kwP%2BH6NkqMNJdDPCAA%3D%3D</strong>&amp;redirect_uri=<strong>https%3A%2F%2Fexample.com%2Fapi%2Fauth%2F</strong> HTTP/1.1</code>
+            <code>POST
+            /api/auth/?auth_code=<strong>2lG5oyADZhjihU1XgXTJLTiZUB4dP7XVW2oUJkAAVVuyZ10hX6sIfXi%2BPPCz8eDkmx0PmyodVQIetDmTCgEn7siFE4%2FgMEaOEwOD2QcNYube38BcZSIDUErJfwVFbi9H&gt;</strong>&amp;client_key=<strong>JuCt7pExA8M0XVKbufSR%2BQ%3D%3D</strong>&amp;client_secret=<strong>SabnZ9AAUrZa%2Fz1k%2FE0BU6AKn%2FqktJMeSVZoV3JdKyTf4TiDErz1miF2fUSkcWpGeaf8kwP%2BH6NkqMNJdDPCAA%3D%3D</strong>&amp;redirect_uri=<strong>https%3A%2F%2Fexample.com%2Fapi%2Fauth%2F</strong> HTTP/1.1</code>
             <code>Host: tz.mohs.mn</code>
         </pre>
         {% endspaceless %}
     </div>
 
-    <div>
+    <div tabindex=0>
         <p>
             <code>tz.mohs.mn/api/auth/</code> нь <strong>POST</strong> хүсэлтийг
             хүлээн авч <code>access_token</code>, <code>token_type</code>, <code>expires_in</code>,
@@ -387,7 +383,7 @@
 
     <h3> 5. Танай example.com сайтаас tz.mohs.mn рүү хандаж хэрэглэгчийн хувийн мэдээллийг авна </h3>
 
-    <div>
+    <div tabindex=0>
         <p>
             <strong>JSON</strong> агуулга дээр ирсэн утгын дагуу
             <strong>Authorization</strong> header дээр
@@ -417,7 +413,7 @@
         {% endspaceless %}
     </div>
 
-    <div>
+    <div tabindex=0>
         <p>
             Хандалтын код зөв бол хүссэн үр дүнг дуудаж буцаана.
         </p>

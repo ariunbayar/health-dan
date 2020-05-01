@@ -3,6 +3,7 @@ from django.urls import path
 import page.views
 import secure.views
 import client.views
+import oauth2.views
 
 
 def prefix_patterns(uri_prefix, view, name_prefix, *patterns):
@@ -33,6 +34,7 @@ urlpatterns += prefix_patterns(
 urlpatterns += prefix_patterns(
         'api/p/', page.views, 'page-',
         ('instructions/', 'instructions', {}, 'instructions'),
+        ('dashboard/', 'dashboard', {}, 'dashboard'),
     )
 
 urlpatterns += prefix_patterns(
@@ -46,4 +48,12 @@ urlpatterns += prefix_patterns(
         ('index/', 'index', {}, 'index'),
         ('<int:pk>/delete/', 'delete', {}, 'delete'),
         ('<int:pk>/toggle-active/', 'toggle_active', {}, 'toggle-active'),
+    )
+
+urlpatterns += prefix_patterns(
+        'api/', oauth2.views, 'oauth2-',
+        ('dan/', 'dan', {}, 'dan'),
+        ('login/', 'login', {}, 'login'),
+        ('auth/', 'authorize', {}, 'authorize'),
+        ('service/', 'service', {}, 'service'),
     )

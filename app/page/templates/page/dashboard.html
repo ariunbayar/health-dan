@@ -1,0 +1,88 @@
+<!doctype html>
+{% load static %}
+{% load humanize %}
+<html>
+
+<head>
+
+    <link href="{% static "css/main.css" %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+<h2>Dashboard</h2>
+
+<p> Зөвхөн сүүлийн {{ max_tokens }} хандалтыг харуулав. </p>
+
+{% for token in tokens %}
+
+<table class="fullwidth">
+    <thead>
+        <tr>
+            <th width="4%"></th>
+            <th width="24%">Client state:</th>
+            <th width="24%">Authorization code:</th>
+            <th width="24%">Access token: </th>
+            <th width="24%">Scope: </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th> #{{ token.pk }} </th>
+            <td> {{ token.created_at | naturaltime }} </td>
+            <td>
+                <strong>{{ token.created_at }}</strong>
+            </td>
+            <td>
+                {{ token.redirect_uri }}
+            </td>
+        </tr>
+        <tr>
+            <td> </td>
+            <td><code class="word-break">{{ token.client_state }}</code></td>
+            <td>
+                <code class="word-break">{{ token.auth_code }}</code><br/>
+                Exp:
+                {{ token.auth_code_expire_at | default:"" }}
+                ({{ token.auth_code_expire_at | naturaltime }})
+            </td>
+            <td>
+                <code class="word-break">{{ token.access_token | default:"" }}</code><br/>
+                Exp: {{ token.access_token_expire_at | default:"" }}
+                {% if token.access_token_expire_at %}
+                    ({{ token.access_token_expire_at | naturaltime }})
+                {% endif %}
+            </td>
+            <td>
+                <pre>{{ token.scope | default:"" }}</pre>
+            </td>
+        </tr>
+        <tr>
+            <td> </td>
+            <td>
+                {{ token.client.name }}:
+                <code>{{ token.client.api_key }}</code>
+            </td>
+            <td colspan="2">
+                {{ token.user }}
+                ({{ token.email | default:"-" }})
+            </td>
+            <td>
+                Accessed:
+                {{ token.accessed_at }}
+                {% if token.accessed_at %}
+                    ({{ token.accessed_at | naturaltime }})
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+{% endfor %}
+
+
+
+</body>
+
+</html>

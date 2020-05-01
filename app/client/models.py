@@ -4,7 +4,7 @@ from django.db import models
 class Client(models.Model):
 
     name = models.CharField(max_length=250)
-    api_key = models.CharField(max_length=50)
+    api_key = models.CharField(max_length=50, db_index=True)
     api_secret = models.CharField(max_length=500)
     is_active = models.BooleanField(default=False, blank=True)
     redirect_uri = models.CharField(max_length=500)

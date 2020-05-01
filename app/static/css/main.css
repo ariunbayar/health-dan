@@ -81,7 +81,7 @@ td, th {
 
 
 pre {
-    background-color: rgba(227, 230, 240, 0.35);
+    background-color: #f5f6fa;
     margin: 1rem 0;
     padding: 1rem 1rem;
     white-space: pre-line;
@@ -121,7 +121,7 @@ pre code strong {
 
 code {
     border: .1rem solid #e3e6f0;
-    background-color: rgba(227, 230, 240, 0.35);
+    background-color: #f5f6fa;
     border-radius: .2rem;
     padding: 0 .4rem;
 }
@@ -130,13 +130,27 @@ code {
 .code-intros {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 0 2rem;
+    grid-gap: 1rem 1rem;
     grid-auto-rows: auto;
 }
 
 .code-intros h3 {
     grid-column: span 3;
 }
+.code-intros > div:focus,
+.code-intros > div:focus + div,
+.code-intros > div:focus + div > pre,
+.code-intros > div:focus + div + div,
+.code-intros > div:focus + div + div > pre {
+    background-color: #fff8e1;
+    box-shadow: 0 1rem 1rem -1rem #e3e6f0;
+    outline: none;
+}
+.code-intros pre {
+    margin: 0;
+    height: calc(100% - 2rem);
+}
+
 
 h1, h2, h3 {
     padding: 1rem;

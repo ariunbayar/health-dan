@@ -16,6 +16,9 @@
 
     {% if request.user.is_authenticated %}
     <li>
+        <a href="{% url "page-dashboard" %}">Dashboard</a>
+    </li>
+    <li>
         <a href="{% url "client-index" %}">Manage client</a>
     </li>
     {% endif %}
