@@ -1,0 +1,8 @@
+-r base.txt
+asgiref==3.2.7
+cffi==1.14.0
+gunicorn==20.0.4
+pycparser==2.20
+pytz==2019.3
+six==1.14.0
+sqlparse==0.3.1
