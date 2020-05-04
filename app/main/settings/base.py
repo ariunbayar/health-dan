@@ -109,3 +109,5 @@ LOGOUT_REDIRECT_URL = 'secure-login'
 DATETIME_FORMAT = 'Y-m-d H:i'
 DATE_FORMAT = 'Y-m-d'
 TIME_FORMAT = 'H:i'
+
+SESSION_COOKIE_NAME = "tz-api"

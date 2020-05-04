@@ -12,14 +12,14 @@ class Token(models.Model):
     class Meta:
         ordering = ('-created_at',)
 
-    # 32 bytes -> 64 chars (hex encoded)
-    client_state = models.CharField(max_length=64)
-
     client = models.ForeignKey('client.Client', on_delete=models.PROTECT, related_name='tokens')
 
-    user = models.ForeignKey('user.User', on_delete=models.PROTECT, related_name='tokens')
+    user = models.ForeignKey('user.User', on_delete=models.PROTECT, related_name='tokens', null=True)
 
-    redirect_uri = models.CharField(max_length=500)
+    redirect_forward_uri = models.CharField(max_length=500)
+    redirect_return_uri = models.CharField(max_length=500)
+
+    auth_code_remote = models.CharField(max_length=256, db_index=True)
 
     # 96 bytes -> 128 chars (base64 encoded)
     auth_code = models.CharField(max_length=128, db_index=True)

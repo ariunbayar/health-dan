@@ -7,83 +7,34 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 
 from client.models import Client
+from main.tz_auth_server import TZAuthServerStep1
+
 from .models import Token
 
 
 def dan(request):
-    # TODO implement
-    pass
 
+    tz_auth = TZAuthServerStep1(request)
 
-class LoginEndpoint():
+    if not tz_auth.is_return_params_valid():
+        raise Http404
 
-    def __init__(self, request):
-        self.api_key = request.GET.get('client_key')
-        self.redirect_uri = request.GET.get('redirect_uri')
-        self.state = request.GET.get('state')
-
-    def is_valid(self):
-
-        client = Client.objects.filter(api_key=self.api_key).first()
-        if not client:
-            return False
-
-        if not client.redirect_uri == self.redirect_uri:
-            return False
-
-        self.client = client
-
-        return True
-
-    def save_auth_code(self, user):
-        token = Token()
-        token.client_state = self.state
-        token.client = self.client
-        token.user = user
-        token.generate_auth_code()
-        # Stores redirect_uri for logging reasons
-        token.redirect_uri = self.client.redirect_uri
-        token.save()
-        self.token = token
-
-    def build_redirect_uri(self):
-
-        params = {
-            'auth_code': self.token.auth_code,
-            'state': self.token.client_state,
-        }
-
-        base_uri = self.token.client.redirect_uri
-        if not base_uri.endswith('?'):
-            base_uri += '?'
-
-        return base_uri + urlencode(params)
+    tz_auth.setup_auth_code()
+    redirect_uri = tz_auth.build_return_uri()
+    from django.http import HttpResponse; return HttpResponse('Redirect to: <br/>' + redirect_uri)  # TODO remove for production
+    return redirect(redirect_uri)
 
 
 def login(request):
 
-    # TODO implement sso.gov.mn
+    tz_auth = TZAuthServerStep1(request)
 
-    # if request.GET.get('autologin') == 'yes':
-    if request.method == 'POST':
+    if not tz_auth.is_forward_params_valid():
+        raise Http404
 
-        login_endpoint = LoginEndpoint(request)
-
-        if not login_endpoint.is_valid():
-            raise Http404
-
-        # TODO this block is to be rewritten
-        from user.models import User
-        from django.contrib import auth
-        user = User.objects.filter(is_superuser=True).first()
-        auth.login(request, user)
-
-        login_endpoint.save_auth_code(user)
-        uri = login_endpoint.build_redirect_uri()
-
-        return redirect(uri)
-
-    return render(request, 'secure/login.html', {})
+    redirect_uri = tz_auth.build_forward_uri()
+    from django.http import HttpResponse; return HttpResponse('Redirect to: <br/>' + redirect_uri)  # TODO remove for production
+    return redirect(redirect_uri)
 
 
 class AuthorizeEndpoint():

