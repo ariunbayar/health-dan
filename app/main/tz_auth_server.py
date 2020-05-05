@@ -1,3 +1,4 @@
+import base64
 from os import urandom
 import requests
 from urllib.parse import urlencode
@@ -161,13 +162,7 @@ class TZAuthServerStep2():
 
         return True
 
-    def fetch_access_token(request):
-
-        import base64
-        from urllib.parse import urlencode
-        from django.shortcuts import reverse
-
-        callback_url = request.build_absolute_uri(reverse('admin-page-sso-gov-mn'))
+    def fetch_access_token(self):
 
         url = 'https://sso.gov.mn/oauth2/token'
         base_uri = settings.SSO_GOV_MN['ENDPOINTS']['TOKEN']
