@@ -22,7 +22,7 @@ class TZAuthServerStep1():
         state_client = self.request.GET.get('state')
         scope = self.request.GET.get('scope')
 
-        client = Client.objects.filter(api_key=api_key).first()
+        client = Client.objects.filter(api_key=api_key, is_active=True).first()
         if not client:
             return False
 
@@ -82,7 +82,7 @@ class TZAuthServerStep1():
         if not (state_client and api_key and redirect_forward_uri):
             return False
 
-        client = Client.objects.filter(api_key=api_key).first()
+        client = Client.objects.filter(api_key=api_key, is_active=True).first()
         if not client:
             return False
 
@@ -139,7 +139,7 @@ class TZAuthServerStep2():
         if not self.request.method == 'POST':
             return False
 
-        client = Client.objects.filter(api_key=api_key).first()
+        client = Client.objects.filter(api_key=api_key, is_active=True).first()
         if not client:
             return False
 
