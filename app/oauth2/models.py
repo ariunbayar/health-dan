@@ -24,7 +24,7 @@ class Token(models.Model):
 
     auth_code_expire_at = models.DateTimeField()
 
-    auth_token_remote = models.CharField(max_length=256, null=True)
+    access_token_remote = models.CharField(max_length=256, null=True)
 
     # 96 bytes -> 128 chars (base64 encoded)
     access_token = models.CharField(max_length=128, db_index=True, null=True)

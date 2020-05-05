@@ -164,7 +164,6 @@ class TZAuthServerStep2():
 
     def fetch_access_token(self):
 
-        url = 'https://sso.gov.mn/oauth2/token'
         base_uri = settings.SSO_GOV_MN['ENDPOINTS']['TOKEN']
         if not base_uri.endswith('?'):
             base_uri += '?'
@@ -177,7 +176,7 @@ class TZAuthServerStep2():
                 'redirect_uri': settings.SSO_GOV_MN['CALLBACK_URI'],
             }
 
-        rsp = requests.post(base_uri + urlencode(params), data={}, headers=self.BASE_HEADERS)
+        rsp = requests.post(base_uri + urlencode(params), headers=self.BASE_HEADERS)
 
         token_info = rsp.json()
         self.token.access_token_remote = token_info['access_token']
@@ -202,3 +201,58 @@ class TZAuthServerStep2():
             'scope': self.token.scope_remote,
         }
         return rsp
+
+
+class TZAuthServerStep3():
+
+    BASE_HEADERS = {
+            'User-Agent': 'tz.mohs.mn/api/ 1.0'
+        }
+
+    def __init__(self, request):
+        self.request = request
+
+    def is_request_valid(self):
+
+        if not self.request.method == 'POST':
+            return False
+
+        try:
+            auth_header = request.META.get('HTTP_AUTHORIZATION', ' ')
+            token_type, access_token = auth_header.split(' ')
+        except:
+            token_type = None
+            access_token = None
+
+        if not access_token or not token_type == 'Bearer':
+            return False
+
+        token = Token.objects.filter(
+                access_token_remote__isnull=False,
+                access_token=self.access_token,
+                access_token_expire_at__gt=timezone.now(),
+                accessed_at__isnull=True,
+            ).first()
+
+        if not token:
+            return False
+
+        self.token = token
+
+        return True
+
+    def set_as_accessed(self):
+        self.token.access_token_expire_at = timezone.now()
+        self.token.accessed_at = timezone.now()
+        self.token.save()
+
+    def fetch_service_json(self):
+
+        base_uri = settings.SSO_GOV_MN['ENDPOINTS']['SERVICE']
+
+        headers = {
+                **self.BASE_HEADERS,
+                'Authorization': 'Bearer %s' % self.token.access_token_remote,
+            }
+        rsp = requests.post(base_uri, headers=headers)
+        return rsp.json()
