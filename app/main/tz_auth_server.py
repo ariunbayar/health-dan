@@ -1,9 +1,11 @@
 from os import urandom
+import requests
 from urllib.parse import urlencode
 
-from client.models import Client
 from django.conf import settings
+from django.utils import timezone
 
+from client.models import Client
 from oauth2.models import Token
 
 
@@ -49,7 +51,7 @@ class TZAuthServerStep1():
                 'redirect_forward_uri': settings.SSO_GOV_MN['CALLBACK_URI'],
             }
 
-        base_uri = settings.SSO_GOV_MN['BASE_URI']
+        base_uri = settings.SSO_GOV_MN['ENDPOINTS']['AUTHORIZE']
         if not base_uri.endswith('?'):
             base_uri += '?'
 
@@ -116,17 +118,92 @@ class TZAuthServerStep1():
 
         return base_uri + urlencode(params)
 
-    def save_auth_code(self, user):
 
-        token = Token()
-        token.state_tz = self.state
-        token.client = self.client
+class TZAuthServerStep2():
 
+    BASE_HEADERS = {
+            'User-Agent': 'tz.mohs.mn/api/ 1.0'
+        }
 
-        token.client = self.client
-        token.user = user
-        token.generate_auth_code()
-        # Stores redirect_uri for logging reasons
-        token.redirect_uri = self.client.redirect_uri
-        token.save()
+    def __init__(self, request):
+        self.request = request
+
+    def is_forward_params_valid(self):
+
+        auth_code = self.request.GET.get('auth_code')
+        api_key = self.request.GET.get('client_key')
+        api_secret = self.request.GET.get('client_secret')
+        redirect_uri = self.request.GET.get('redirect_uri')
+
+        if not self.request.method == 'POST':
+            return False
+
+        client = Client.objects.filter(api_key=api_key).first()
+        if not client:
+            return False
+
+        if not client.redirect_uri == redirect_uri:
+            return False
+
+        if not client.api_secret == api_secret:
+            return False
+
+        token = Token.objects.filter(
+                client=client,
+                auth_code=auth_code,
+                auth_code_expire_at__gt=timezone.now(),
+                access_token__isnull=True,
+            ).first()
+        if not token:
+            return False
+
         self.token = token
+
+        return True
+
+    def fetch_access_token(request):
+
+        import base64
+        from urllib.parse import urlencode
+        from django.shortcuts import reverse
+
+        callback_url = request.build_absolute_uri(reverse('admin-page-sso-gov-mn'))
+
+        url = 'https://sso.gov.mn/oauth2/token'
+        base_uri = settings.SSO_GOV_MN['ENDPOINTS']['TOKEN']
+        if not base_uri.endswith('?'):
+            base_uri += '?'
+
+        params = {
+                'grant_type': 'authorization_code',
+                'code': self.token.auth_code_remote,
+                'client_id': settings.SSO_GOV_MN['CLIENT_ID'],
+                'client_secret': base64.b64encode(settings.SSO_GOV_MN['CLIENT_SECRET'].encode()),
+                'redirect_uri': settings.SSO_GOV_MN['CALLBACK_URI'],
+            }
+
+        rsp = requests.post(base_uri + urlencode(params), data={}, headers=self.BASE_HEADERS)
+
+        token_info = rsp.json()
+        self.token.access_token_remote = token_info['access_token']
+        self.token.scope_remote = token_info['scope']
+        self.token.save()
+        # TODO what to do with these?
+        # token_info['token_type']
+        # token_info['expires_in']
+
+    def setup_access_token(self):
+        expires_in = 61
+        self.token.generate_access_token(expires_in)
+        self.token.auth_code_expire_at = timezone.now()
+        self.token.save()
+
+    def build_rsp(self):
+        expires_in = self.token.access_token_expire_at - timezone.now()
+        rsp = {
+            'access_token': self.token.access_token,
+            'expires_in': expires_in.seconds,
+            'token_type': 'Bearer',
+            'scope': self.token.scope_remote,
+        }
+        return rsp

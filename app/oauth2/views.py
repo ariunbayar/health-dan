@@ -8,31 +8,32 @@ from django.utils import timezone
 
 from client.models import Client
 from main.tz_auth_server import TZAuthServerStep1
+from main.tz_auth_server import TZAuthServerStep2
 
 from .models import Token
 
 
 def dan(request):
 
-    tz_auth = TZAuthServerStep1(request)
+    tz_auth1 = TZAuthServerStep1(request)
 
-    if not tz_auth.is_return_params_valid():
+    if not tz_auth1.is_return_params_valid():
         raise Http404
 
-    tz_auth.setup_auth_code()
-    redirect_uri = tz_auth.build_return_uri()
+    tz_auth1.setup_auth_code()
+    redirect_uri = tz_auth1.build_return_uri()
     from django.http import HttpResponse; return HttpResponse('Redirect to: <br/>' + redirect_uri)  # TODO remove for production
     return redirect(redirect_uri)
 
 
 def login(request):
 
-    tz_auth = TZAuthServerStep1(request)
+    tz_auth1 = TZAuthServerStep1(request)
 
-    if not tz_auth.is_forward_params_valid():
+    if not tz_auth1.is_forward_params_valid():
         raise Http404
 
-    redirect_uri = tz_auth.build_forward_uri()
+    redirect_uri = tz_auth1.build_forward_uri()
     from django.http import HttpResponse; return HttpResponse('Redirect to: <br/>' + redirect_uri)  # TODO remove for production
     return redirect(redirect_uri)
 
@@ -95,14 +96,14 @@ class AuthorizeEndpoint():
 @csrf_exempt
 def authorize(request):
 
-    # TODO implement
+    tz_auth2 = TZAuthServerStep2(request)
 
-    authorize_endpoint = AuthorizeEndpoint(request)
-    if not authorize_endpoint.is_valid():
+    if not tz_auth2.is_forward_params_valid():
         raise Http404
 
-    authorize_endpoint.set_access_token()
-    rsp = authorize_endpoint.build_rsp()
+    tz_auth2.fetch_access_token()
+    tz_auth2.setup_access_token()
+    rsp = tz_auth2.build_rsp()
 
     return JsonResponse(rsp)
 
@@ -155,6 +156,7 @@ class ServiceEndpoint():
 
 @csrf_exempt
 def service(request):
+    raise Exception('-- TODO --')
 
     service_endpoint = ServiceEndpoint(request)
     if not service_endpoint.is_valid():

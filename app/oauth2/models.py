@@ -14,22 +14,24 @@ class Token(models.Model):
 
     client = models.ForeignKey('client.Client', on_delete=models.PROTECT, related_name='tokens')
 
-    user = models.ForeignKey('user.User', on_delete=models.PROTECT, related_name='tokens', null=True)
-
     redirect_forward_uri = models.CharField(max_length=500)
     redirect_return_uri = models.CharField(max_length=500)
 
-    auth_code_remote = models.CharField(max_length=256, db_index=True)
+    auth_code_remote = models.CharField(max_length=256)
 
     # 96 bytes -> 128 chars (base64 encoded)
     auth_code = models.CharField(max_length=128, db_index=True)
 
     auth_code_expire_at = models.DateTimeField()
 
+    auth_token_remote = models.CharField(max_length=256, null=True)
+
     # 96 bytes -> 128 chars (base64 encoded)
     access_token = models.CharField(max_length=128, db_index=True, null=True)
 
     access_token_expire_at = models.DateTimeField(null=True)
+
+    scope_remote = models.TextField(null=True)
 
     # JSON encoded service as scope
     scope = models.TextField(null=True)
