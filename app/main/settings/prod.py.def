@@ -25,8 +25,14 @@ DATABASES = {
 
 # See more at: https://developer.sso.gov.mn/oauth/version1.html#id27
 SSO_GOV_MN = {
+    'ENDPOINTS': {
+        'AUTHORIZE': '',
+        'TOKEN': '',
+        'SERVICE': '',
+    },
     'CLIENT_ID': '',
     'CLIENT_SECRET': '',
+    'CALLBACK_URI': '',
 }
 
 
