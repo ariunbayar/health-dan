@@ -229,7 +229,7 @@ class TZAuthServerStep3():
 
         token = Token.objects.filter(
                 access_token_remote__isnull=False,
-                access_token=self.access_token,
+                access_token=access_token,
                 access_token_expire_at__gt=timezone.now(),
                 accessed_at__isnull=True,
             ).first()
