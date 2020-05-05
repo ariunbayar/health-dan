@@ -218,7 +218,7 @@ class TZAuthServerStep3():
             return False
 
         try:
-            auth_header = request.META.get('HTTP_AUTHORIZATION', ' ')
+            auth_header = self.request.META.get('HTTP_AUTHORIZATION', ' ')
             token_type, access_token = auth_header.split(' ')
         except:
             token_type = None
@@ -255,4 +255,7 @@ class TZAuthServerStep3():
                 'Authorization': 'Bearer %s' % self.token.access_token_remote,
             }
         rsp = requests.post(base_uri, headers=headers)
-        return rsp.json()
+        if rsp.status_code == 200:
+            return rsp.text
+
+        return '{"success": false}'

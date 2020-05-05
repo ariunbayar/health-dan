@@ -2,6 +2,7 @@ from urllib.parse import urlencode
 import logging
 
 from django.http import Http404, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
@@ -23,7 +24,6 @@ def dan(request):
 
     tz_auth1.setup_auth_code()
     redirect_uri = tz_auth1.build_return_uri()
-    from django.http import HttpResponse; return HttpResponse('Redirect to: <br/>' + redirect_uri)  # TODO remove for production
     return redirect(redirect_uri)
 
 
@@ -35,7 +35,6 @@ def login(request):
         raise Http404
 
     redirect_uri = tz_auth1.build_forward_uri()
-    from django.http import HttpResponse; return HttpResponse('Redirect to: <br/>' + redirect_uri)  # TODO remove for production
     return redirect(redirect_uri)
 
 
@@ -65,4 +64,4 @@ def service(request):
     tz_auth3.set_as_accessed()
     rsp = tz_auth3.fetch_service_json()
 
-    return JsonResponse(rsp)
+    return HttpResponse(rsp, content_type="application/json")
