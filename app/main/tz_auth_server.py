@@ -165,8 +165,6 @@ class TZAuthServerStep2():
     def fetch_access_token(self):
 
         base_uri = settings.SSO_GOV_MN['ENDPOINTS']['TOKEN']
-        if not base_uri.endswith('?'):
-            base_uri += '?'
 
         params = {
                 'grant_type': 'authorization_code',
@@ -176,7 +174,7 @@ class TZAuthServerStep2():
                 'redirect_uri': settings.SSO_GOV_MN['CALLBACK_URI'],
             }
 
-        rsp = requests.post(base_uri + urlencode(params), headers=self.BASE_HEADERS)
+        rsp = requests.post(base_uri, json=params), headers=self.BASE_HEADERS)
 
         token_info = rsp.json()
         self.token.access_token_remote = token_info['access_token']
