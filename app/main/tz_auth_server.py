@@ -174,7 +174,7 @@ class TZAuthServerStep2():
                 'redirect_uri': settings.SSO_GOV_MN['CALLBACK_URI'],
             }
 
-        rsp = requests.post(base_uri, json=params, headers=self.BASE_HEADERS)
+        rsp = requests.post(base_uri, data=params, headers=self.BASE_HEADERS)
 
         token_info = rsp.json()
         self.token.access_token_remote = token_info['access_token']
