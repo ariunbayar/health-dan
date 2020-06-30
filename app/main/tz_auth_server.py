@@ -170,7 +170,7 @@ class TZAuthServerStep2():
                 'grant_type': 'authorization_code',
                 'code': self.token.auth_code_remote,
                 'client_id': settings.SSO_GOV_MN['CLIENT_ID'],
-                'client_secret': base64.b64encode(settings.SSO_GOV_MN['CLIENT_SECRET'].encode()),
+                'client_secret': base64.b64encode(settings.SSO_GOV_MN['CLIENT_SECRET'].encode()).decode(),
                 'redirect_uri': settings.SSO_GOV_MN['CALLBACK_URI'],
             }
 
