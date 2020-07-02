@@ -162,3 +162,9 @@ h1, h2, h3 {
 h3 {
     padding: .4rem 1rem;
 }
+
+
+textarea.service_json_rsp{
+    width: 100%;
+    height: 5rem;
+}

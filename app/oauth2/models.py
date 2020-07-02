@@ -2,8 +2,10 @@ from datetime import timedelta
 from os import urandom
 from base64 import b64encode
 
+from django.core.cache import cache
 from django.db import models
 from django.utils import timezone
+from django.utils.functional import cached_property
 
 
 # XXX what is the best name for this model?
@@ -47,3 +49,7 @@ class Token(models.Model):
     def generate_access_token(self, expires_in=60):
         self.access_token = b64encode(urandom(96)).decode()
         self.access_token_expire_at = timezone.now() + timedelta(seconds=expires_in)
+
+    @cached_property
+    def service_json_rsp(self):
+        return cache.get('service_json_rsp_%s' % self.pk)

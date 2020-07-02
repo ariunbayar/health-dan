@@ -3,9 +3,11 @@ from os import urandom
 import requests
 from urllib.parse import urlencode
 
+from django.core.cache import cache
 from django.conf import settings
 from django.utils import timezone
 
+from main.utils import get_config
 from client.models import Client
 from oauth2.models import Token
 
@@ -244,6 +246,16 @@ class TZAuthServerStep3():
         self.token.accessed_at = timezone.now()
         self.token.save()
 
+    def _cache_service_json_rsp(self, key, value):
+        try:
+            duration = get_config('Сервисийн хариуг cache хийх (цагаар)')
+            duration = int(duration)
+            duration_sec = duration * 3600
+        except:
+            pass
+        else:
+            cache.set(key, value, duration_sec)
+
     def fetch_service_json(self):
 
         base_uri = settings.SSO_GOV_MN['ENDPOINTS']['SERVICE']
@@ -253,6 +265,7 @@ class TZAuthServerStep3():
                 'Authorization': 'Bearer %s' % self.token.access_token_remote,
             }
         rsp = requests.post(base_uri, headers=headers)
+        _cache_service_json_rsp('service_json_rsp_%s' % self.token.pk, rsp.text)
         if rsp.status_code == 200:
             return rsp.text
 

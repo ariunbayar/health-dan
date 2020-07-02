@@ -76,6 +76,15 @@
                 {% endif %}
             </td>
         </tr>
+        <tr>
+            <td> </td>
+            <td colspan="4">
+                {% if token.service_json_rsp %}
+                    Хариу:
+                    <textarea class="service_json_rsp">{{ token.service_json_rsp }}</textarea>
+                {% endif %}
+            </td>
+        </tr>
     </tbody>
 </table>
 

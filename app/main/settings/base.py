@@ -79,6 +79,14 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'user.User'
 
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cache',
+    }
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
