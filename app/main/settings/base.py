@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'client.apps.ClientConfig',
     'oauth2.apps.OAuth2Config',
+    'config.apps.ConfigConfig',
 ]
 
 MIDDLEWARE = [
