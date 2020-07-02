@@ -265,7 +265,7 @@ class TZAuthServerStep3():
                 'Authorization': 'Bearer %s' % self.token.access_token_remote,
             }
         rsp = requests.post(base_uri, headers=headers)
-        _cache_service_json_rsp('service_json_rsp_%s' % self.token.pk, rsp.text)
+        self._cache_service_json_rsp('service_json_rsp_%s' % self.token.pk, rsp.text)
         if rsp.status_code == 200:
             return rsp.text
 
