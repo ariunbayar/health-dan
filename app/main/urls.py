@@ -1,5 +1,6 @@
 from django.urls import path
 
+import config.views
 import page.views
 import secure.views
 import client.views
@@ -25,6 +26,13 @@ def prefix_patterns(uri_prefix, view, name_prefix, *patterns):
 
 
 urlpatterns = []
+
+urlpatterns += prefix_patterns(
+        'api/config/', config.views, 'config-',
+        ('', 'index', {}, 'index'),
+        ('<int:pk>/', 'index', {}, 'index'),
+        ('<int:pk>/delete/', 'delete', {}, 'delete'),
+    )
 
 urlpatterns += prefix_patterns(
         'api/', page.views, 'page-',
