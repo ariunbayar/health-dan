@@ -41,6 +41,7 @@ def index(request):
 @admin_required
 def delete(request, pk):
     client = get_object_or_404(Client, pk=pk)
+    client.tokens.all().delete()
     client.delete()
     return redirect('client-index')
 
